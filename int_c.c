@@ -8,6 +8,16 @@ int token;  //current token
 char *src, *old_src; //pointer to source code string
 int poolsize;
 int line;
+int *text,            // text segment
+    *old_text,        // for dump text segment
+    *stack;           // stack
+char *data;           // data segment
+int *pc, *bp, *sp, ax, cycle; // virtual machine registers
+
+// instructions
+enum { LEA ,IMM ,JMP ,CALL,JZ  ,JNZ ,ENT ,ADJ ,LEV ,LI  ,LC  ,SI  ,SC  ,PUSH,
+       OR  ,XOR ,AND ,EQ  ,NE  ,LT  ,GT  ,LE  ,GE  ,SHL ,SHR ,ADD ,SUB ,MUL ,DIV ,MOD ,
+       OPEN,READ,CLOS,PRTF,MALC,MSET,MCMP,EXIT };
 
 void next() {
 	token = *src++;
