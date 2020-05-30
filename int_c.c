@@ -162,6 +162,4 @@ int main(int argc, char **argv) {
 
     return eval();
 
-	program();
-	return eval();
 }
