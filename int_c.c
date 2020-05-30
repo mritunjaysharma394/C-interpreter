@@ -94,6 +94,8 @@ int eval() {
 	return 0;
 }
 
+#undef int // Mac/clang needs this
+
 int main(int argc, char **argv) {
 	int i, fd;
 
@@ -122,6 +124,43 @@ int main(int argc, char **argv) {
 
 	src[i] = 0; //adding EOF character
 	close(fd);
+
+    // allocate memory for virtual machine
+    if (!(text = old_text = malloc(poolsize))) {
+        printf("could not malloc(%d) for text area\n", poolsize);
+        return -1;
+    }
+    if (!(data = malloc(poolsize))) {
+        printf("could not malloc(%d) for data area\n", poolsize);
+        return -1;
+    }
+    if (!(stack = malloc(poolsize))) {
+        printf("could not malloc(%d) for stack area\n", poolsize);
+        return -1;
+    }
+
+    memset(text, 0, poolsize);
+    memset(data, 0, poolsize);
+    memset(stack, 0, poolsize);
+    bp = sp = (int *)((int)stack + poolsize);
+    ax = 0;
+
+
+    i = 0;
+    text[i++] = IMM;
+    text[i++] = 10;
+    text[i++] = PUSH;
+    text[i++] = IMM;
+    text[i++] = 20;
+    text[i++] = ADD;
+    text[i++] = PUSH;
+    text[i++] = EXIT;
+
+    pc = text;
+
+    program();
+
+    return eval();
 
 	program();
 	return eval();
